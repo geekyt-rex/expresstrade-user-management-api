@@ -210,3 +210,35 @@ Manual modifications:
 - Debugged routes and validation
 
 Assignment branch update
+
+# JWT Authentication
+
+## Login
+
+```http
+POST /login
+```
+
+Example Request:
+
+```json
+{
+  "email": "akshay@gmail.com"
+}
+```
+
+Returns JWT token.
+
+---
+
+## Protected Route
+
+```http
+GET /protected
+```
+
+Requires Authorization header:
+
+```text
+Authorization: Bearer <token>
+```
