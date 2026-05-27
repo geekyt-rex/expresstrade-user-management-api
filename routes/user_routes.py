@@ -1,10 +1,13 @@
 from flask import Blueprint
 from flask import request
 
+from flask_jwt_extended import jwt_required
+
 from services.user_service import (
     create_user_service,
     get_all_users_service,
-    get_user_by_id_service
+    get_user_by_id_service,
+    login_user_service
 )
 
 user_bp = Blueprint(
@@ -67,3 +70,27 @@ def get_user_by_id(user_id):
     )
 
     return response, status_code
+
+# LOGIN
+
+@user_bp.route("/login", methods=["POST"])
+def login():
+
+    data = request.get_json()
+
+    response, status_code = login_user_service(
+        data
+    )
+
+    return response, status_code
+
+# PROTECTED ROUTE
+
+@user_bp.route("/protected", methods=["GET"])
+@jwt_required()
+def protected():
+
+    return {
+        "success": True,
+        "message": "Protected route accessed"
+    }, 200

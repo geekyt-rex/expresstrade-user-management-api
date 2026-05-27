@@ -5,6 +5,8 @@ from database.db import db
 
 from utils.validators import validate_user_data
 
+from flask_jwt_extended import create_access_token
+
 # CREATE USER
 
 def create_user_service(data):
@@ -102,4 +104,36 @@ def get_user_by_id_service(user_id):
     return {
         "success": True,
         "user": user.to_dict()
+    }, 200
+
+
+def login_user_service(data):
+
+    email = data.get("email")
+
+    if not email:
+
+        return {
+            "success": False,
+            "error": "Email is required"
+        }, 400
+
+    user = User.query.filter_by(
+        email=email
+    ).first()
+
+    if not user:
+
+        return {
+            "success": False,
+            "error": "Invalid email"
+        }, 401
+
+    access_token = create_access_token(
+        identity=str(user.id)
+    )
+
+    return {
+        "success": True,
+        "access_token": access_token
     }, 200
